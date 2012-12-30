@@ -7,7 +7,7 @@ Tested up to: 3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin is a chance to relive your childhood. Featuring the witty chalkboard gags of Bart Simpson, 
+This plugin is a chance to relive your childhood. Featuring the chalkboard gags of Bart Simpson, 
 this plugin is sure to put a smile on your face.
 
 == Description ==
@@ -24,7 +24,7 @@ and, when used, will return a different Bartism each time the page is loaded.
 
 == Installation ==
 
-1. Upload `simpsons-chalkboard-gag` to the `/wp-content/plugins/` directory
+1. Upload `hello-simpsons-chalkboard-gag` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Sit back and chuckle at Bart's wit every time you load an admin page
 

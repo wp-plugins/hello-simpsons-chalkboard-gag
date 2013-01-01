@@ -2,7 +2,7 @@
 Contributors: dan.rossiter
 Tags: simpsons, bart simpson, admin panel, fun, chalkboard gag, hello dolly
 Requires at least: 3.0
-Stable tag: 0.5
+Stable tag: 1.0
 Tested up to: 3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,7 +13,7 @@ this plugin is sure to put a smile on your face.
 == Description ==
 
 **A big thanks is owed to [The Simpsons Archive](http://www.snpp.com/guides/chalkboard.openings.html),
-without which this plugin would not be maintainable.**
+without which this plugin would not be possible!**
 
 This plugin was based on the Hello Dolly plugin that most active WordPress users are familiar. Much like 
 the reason why Hello Dolly was created, the Simpsons Chalkboard Gag plugin was designed to bring a little 
@@ -31,11 +31,20 @@ and, when used, will return a different Bartism each time the page is loaded.
 Once installed, you will also be able to use the `[simpsons]` shortcode to include a random Bartism anywhere 
 within any of your pages or posts.
 
-**IMPORTANT:** Though this plugin can, in theory, run alongside the **Hello Dolly** plugin that is active 
-by default in WordPress distributions, it is strongly discouraged since the two are not likely to work well 
+**NOTE:** Though this plugin can, in theory, run alongside the **Hello Dolly** plugin that is active 
+by default in WordPress distributions, it is strongly discouraged since the two don't look nice 
 together. Please disable or uninstall **Hello Dolly** before using this plugin.
 
 == Changelog ==
+
+= 1.0 =
+* **Enhancement:** Plugin now performs **much** more efficiently by storing most up-to-date.
+chalkboard gags in your local database. A daily update checks for more Chalkboard Gags to display.
+* **Enhancement:** Plugin now alerts user on activation if **Hello Dolly** is active (since the two 
+plugins do not look good running side-by-side).
+* **Enhancement:** This release also provides much cleaner code for anyone interested in looking 
+at the backend.
+* **Bug Fix:** Minor typo corrections in readme and plugin documentation.
 
 = 0.5 =
 * **Initial Release:** Supports display of random Chalkboard Gag within the admin panel **and** through 

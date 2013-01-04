@@ -18,13 +18,15 @@ function simpsons_get_gag() {
 	$gags = preg_split('/[\r\n]+/', get_option( 'simpsons-gags' ) );
 	
 	// And then randomly choose a line
-	return wptexturize( $gags[ array_rand($gags) ] );
+	return wptexturize( $gags[ mt_rand( 0, count($gags)-1 ) ] );
 }
 add_shortcode( 'simpsons', 'simpsons_get_gag' );
 
 // This just echoes the chosen gag
 function simpsons_chalkboard_gag() {
-	$chosen = simpsons_get_gag();
+        if( !trim( $chosen = simpsons_get_gag() ) )
+        	$chosen = 'If this message remains, something has gone wrong.';
+
 	echo "<p id='simpsons'>$chosen</p>";
 }
 
@@ -119,12 +121,23 @@ function simpsons_css() {
 		}
 
 		// Only fallback to local gags when there isn't a more recent version
+		// NOTE: Formerly used get_file_contents(), but this failed on some servers
 		if( !get_option( 'simpsons-gags' ) && (!isset($gags) || !$gags) ) // fallback to local file
-			$gags = file_get_contents( plugin_dir_url( __FILE__ ).'gags.db' );
-		
+			$gags = simpsons_get_local_gags( plugin_dir_url( __FILE__ ).'gags.db' );
 
 		// Store gags
 		if( isset($gags) && $gags ) update_option( 'simpsons-gags', $gags );
+	}
+
+	function simpsons_get_local_gags($gagpath){
+		if (is_file($gagpath)) {
+			ob_start();
+			include $gagpath;
+			$gags = ob_get_contents();
+			ob_end_clean();
+			return $gags;
+		}
+		return false;
 	}
 // END HELPERS
 ?>

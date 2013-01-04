@@ -37,6 +37,10 @@ together. Please disable or uninstall **Hello Dolly** before using this plugin.
 
 == Changelog ==
 
+= trunk =
+* **Bug Fix (in progress):** Some servers fail on fallback to local gags. So far, tried changing
+get_file_contents() to a hack involving includeing the file. No luck.
+
 = 1.0 =
 * **Enhancement:** Plugin now performs **much** more efficiently by storing most up-to-date.
 chalkboard gags in your local database. A daily update checks for more Chalkboard Gags to display.

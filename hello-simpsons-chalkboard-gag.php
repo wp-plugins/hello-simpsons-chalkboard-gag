@@ -24,8 +24,8 @@ add_shortcode( 'simpsons', 'simpsons_get_gag' );
 
 // This just echoes the chosen gag
 function simpsons_chalkboard_gag() {
-        if( !trim( $chosen = simpsons_get_gag() ) )
-        	$chosen = 'If this message remains, something has gone wrong.';
+        if( $err = get_option( 'simpsons-error') )
+		$chosen = "Error: $err";
 
 	echo "<p id='simpsons'>$chosen</p>";
 }
@@ -99,6 +99,7 @@ function simpsons_css() {
 	// All good plugins should cleanup after themselves!
 	function simpsons_deactivate(){
 		delete_option( 'simpsons-gags' );
+		delete_option( 'simpsons-error' );
 		wp_clear_scheduled_hook( 'simpsons-gag-update' );
 		// GOODBYE CRUEL WORLD!!!
 	}
@@ -107,37 +108,46 @@ function simpsons_css() {
 
 
 // HELPERS //
-	function simpsons_has_curl() {
-		return in_array( 'curl', get_loaded_extensions() );
-	}
-
 	function simpsons_store_gags(){
 		// retrive most recent listing of Bartisms from remote
-		if( simpsons_has_curl() ) {
+		if( !class_exists( 'WP_Http' ) )
+			include_once( ABSPATH . WPINC . '/class-http.php' );
+
+		$gags = new WP_Http;
+		$gags = $gags->request( SIMPSONS_URL, array( 
+				'user-agent' => $_SERVER['HTTP_USER_AGENT'], 
+				'body' => $gags, 'response' => $response ) );
+
+		if( is_wp_error( $gags ) ) { 
+			unset($gags); 
+			update_option( 'simpsons-error', 
+				"{$response['code']}: {$response['message']}" );
+
+		} else { $gags = $gags['body']; }
+
+		// fallback to cURL if previous failed (unlikely, but possible)
+		/*if( !isset( $gags ) && simpsons_has_curl() ) {
 			$ch = curl_init( SIMPSONS_URL );
 			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
 			$gags = curl_exec($ch);
-		}
 
-		// Only fallback to local gags when there isn't a more recent version
-		// NOTE: Formerly used get_file_contents(), but this failed on some servers
-		if( !get_option( 'simpsons-gags' ) && (!isset($gags) || !$gags) ) // fallback to local file
-			$gags = simpsons_get_local_gags( plugin_dir_url( __FILE__ ).'gags.db' );
+			if( curl_error($ch) ){
+				unset($gags);
+				update_option( 'simpsons-error', curl_error($ch) );
+			}
+		}*/
 
 		// Store gags
-		if( isset($gags) && $gags ) update_option( 'simpsons-gags', $gags );
+		if( isset($gags) && $gags ){ 
+			update_option( 'simpsons-gags', $gags ); 
+			delete_option( 'simpsons-error' );
+		}
 	}
 
-	function simpsons_get_local_gags($gagpath){
-		if (is_file($gagpath)) {
-			ob_start();
-			include $gagpath;
-			$gags = ob_get_contents();
-			ob_end_clean();
-			return $gags;
-		}
-		return false;
+	function simpsons_has_curl() {
+		return in_array( 'curl', get_loaded_extensions() );
 	}
+
 // END HELPERS
 ?>

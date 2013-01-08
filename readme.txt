@@ -22,6 +22,9 @@ light-hearted fun into every page of the admin panel.
 As an added bonus, this plugin creates the `[simpsons]` shortcode which can be included on any page or post 
 and, when used, will return a different Bartism each time the page is loaded.
 
+*If this plugin brings a smile to your day, please take a moment to
+[rate it](http://wordpress.org/support/view/plugin-reviews/hello-simpsons-chalkboard-gag#postform)!*
+
 == Installation ==
 
 1. Upload `hello-simpsons-chalkboard-gag` to the `/wp-content/plugins/` directory

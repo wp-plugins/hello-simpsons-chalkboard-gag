@@ -1,8 +1,8 @@
-=== Hello Simpsons Chalkboard Gag ===
+﻿=== Hello Simpsons Chalkboard Gag ===
 Contributors: dan.rossiter
 Tags: simpsons, bart simpson, admin panel, fun, chalkboard gag, hello dolly
 Requires at least: 3.0
-Stable tag: 1.0
+Stable tag: 1.2
 Tested up to: 3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -22,6 +22,9 @@ light-hearted fun into every page of the admin panel.
 As an added bonus, this plugin creates the `[simpsons]` shortcode which can be included on any page or post 
 and, when used, will return a different Bartism each time the page is loaded.
 
+*If this plugin brings a smile to your day, please take a moment to
+[rate it](http://wordpress.org/support/view/plugin-reviews/hello-simpsons-chalkboard-gag#postform)!*
+
 == Installation ==
 
 1. Upload `hello-simpsons-chalkboard-gag` to the `/wp-content/plugins/` directory
@@ -33,13 +36,15 @@ within any of your pages or posts.
 
 **NOTE:** Though this plugin can, in theory, run alongside the **Hello Dolly** plugin that is active 
 by default in WordPress distributions, it is strongly discouraged since the two don't look nice 
-together. Please disable or uninstall **Hello Dolly** before using this plugin.
+together. Please disable or uninstall **Hello Dolly** before using this plugin for best results.
 
 == Changelog ==
 
-= trunk =
-* **Bug Fix (in progress):** Some servers fail on fallback to local gags. So far, tried changing
-get_file_contents() to a hack involving includeing the file. No luck.
+= 1.2 =
+* **Bug Fix:** Plugin now utilizes a WordPress core wrapper function (`wp_remote_get`) to **reliably** retrieve 
+the remote chalkboard gags without breaking.
+* **Bug Fix:** A few minor changes were made to how the chalkboard gags are stored, making the plugin faster.
+* **Change:** The alert that **Hello Dolly** is active was removed. User can decide whether they want both running or not.
 
 = 1.0 =
 * **Enhancement:** Plugin now performs **much** more efficiently by storing most up-to-date.
@@ -56,7 +61,7 @@ use of the `[simpsons]` shortcode in any page or post.
 
 == How The Plugin Stays Up-To-Date ==
 
-As new eipsodes of The Simpsons are released, more chalkboard gags are avialable. To avoid pushing a new 
+As new episodes of The Simpsons are released, more chalkboard gags are avialable. To avoid pushing a new 
 plugin version every week or two, a remote repository is maintained with up-to-date chalkboard gags 
 (within a week or two). 
 

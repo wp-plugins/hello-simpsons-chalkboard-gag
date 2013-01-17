@@ -4,7 +4,7 @@ Plugin Name: Hello Simpsons Chalkboard Gag
 Plugin URI: http://wordpress.org/extend/plugins/simpsons-chalkboard-gag
 Description: Let Bart Simpson's childish wit lighten your day by randomly adding one of his chalkboard gags to your admin panel.
 Author: Dan Rossiter
-Version: 1.2
+Version: 1.2.1
 Author URI: http://danrossiter.org
 */
 
@@ -109,6 +109,9 @@ function simpsons_css() {
 		// Parse & store gags
 		if( isset($gags) && $gags ){
 			$gags = preg_split('/[\r\n]+/', $gags );
+
+			// This was an error, but better to display the error when user views it than to just throw error later
+			if( !is_array( $gags ) ) $gags = (array)$gags;
 
 			update_option( 'simpsons-gags', $gags ); 
 			delete_option( 'simpsons-error' );

@@ -2,7 +2,7 @@
 Contributors: dan.rossiter
 Tags: simpsons, bart simpson, admin panel, fun, chalkboard gag, hello dolly
 Requires at least: 3.0
-Stable tag: 1.2
+Stable tag: 1.2.1
 Tested up to: 3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -39,6 +39,9 @@ by default in WordPress distributions, it is strongly discouraged since the two 
 together. Please disable or uninstall **Hello Dolly** before using this plugin for best results.
 
 == Changelog ==
+
+= 1.2.1 =
+* **Enhancement:** Very minor change to help better debug any potential issues that users may have.
 
 = 1.2 =
 * **Bug Fix:** Plugin now utilizes a WordPress core wrapper function (`wp_remote_get`) to **reliably** retrieve 

@@ -4,30 +4,40 @@ Plugin Name: Hello Simpsons Chalkboard Gag
 Plugin URI: http://wordpress.org/extend/plugins/simpsons-chalkboard-gag
 Description: Let Bart Simpson's childish wit lighten your day by randomly adding one of his chalkboard gags to your admin panel.
 Author: Dan Rossiter
-Version: 1.0
+Version: 1.3
 Author URI: http://danrossiter.org
 */
 
-// To enable calling of is_plugin_active()
-include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-// Define remote gag repository
+// remote gag repository
 define('SIMPSONS_URL', 'http://pastebin.com/raw.php?i=VdKZ0V4d');
 
 function simpsons_get_gag() {
-	// String to array & remove any extra lines
-	$gags = preg_split('/[\r\n]+/', get_option( 'simpsons-gags' ) );
+	$gags = get_option( 'simpsons-gags' );
 	
 	// And then randomly choose a line
-	return wptexturize( $gags[ mt_rand( 0, count($gags)-1 ) ] );
+	return $gags ? wptexturize( $gags[ array_rand($gags) ] ) : false;
 }
 add_shortcode( 'simpsons', 'simpsons_get_gag' );
 
-// This just echoes the chosen gag
+// echo the chosen gag or error
 function simpsons_chalkboard_gag() {
-        if( !trim( $chosen = simpsons_get_gag() ) )
-        	$chosen = 'If this message remains, something has gone wrong.';
+	if( $ret = simpsons_get_gag() ) {
+		// nothing here
+        } elseif( get_option( 'simpsons-first-run' ) ){
+		delete_option( 'simpsons-first-run' );
+		$ret = 'Welcome to Hello Simpsons Chalkboard Gag!';
+	} elseif( !$ret && $ret = get_option( 'simpsons-error') ) {
+		$ret =	"Error: $err. If this persists, please contact the <a ".
+			"href='http://wordpress.org/support/plugin/hello-simpsons-chalkboard-gag' ".
+			"target='_blank'>plugin author</a>.";
 
-	echo "<p id='simpsons'>$chosen</p>";
+	} else {
+		$ret =	"Unknown error. If this persists, please contact the <a ".
+			"href='http://wordpress.org/support/plugin/hello-simpsons-chalkboard-gag' ".
+			"target='_blank'>plugin author</a>.";
+	}
+
+	echo "<p id='simpsons'>$ret</p>";
 }
 
 // We need some CSS to position the paragraph
@@ -49,49 +59,27 @@ function simpsons_css() {
 
 
 // Display Chalkboard Gag //
-	// Now we set that function up to execute when the admin_notices action is called
+	// Now we set that function up to execute when the admin_notices
 	add_action( 'admin_notices', 'simpsons_chalkboard_gag' );
 	// Style p#simpsons
 	add_action( 'admin_head', 'simpsons_css' );
+
+	// support multisite dash display
+	if( is_multisite() ){
+		add_action( 'network_admin_notices', 'simpsons_chalkboard_gag' );
+		add_action( 'network_admin_head', 'simpsons_css' );
+	}
 // End Display Chalkboard Gag //
 
 
 // FIRST RUN //
 	function simpsons_activate(){
-		// Check if Hello Dolly is active
-		if( hello_dolly_active() ) update_option( 'simpsons-conflict', true );
-
 		// Handle updating gags in DB
 		// TODO: create custom 'weekly' regularity (daily is wasting resources)
 		wp_schedule_event( time(), 'daily', 'simpsons-gag-update');
 	}
 	register_activation_hook( __FILE__, 'simpsons_activate' );
 	add_action( 'simpsons-gag-update', 'simpsons_store_gags' );
-	
-	// Display Hello Dolly warning if active (only once)
-	if( get_option( 'simpsons-conflict' ) ){
-		add_action( 'admin_footer', 'simpsons_js' );
-		delete_option( 'simpsons-conflict' );
-	}
-	// Return whether Hello Dolly is active
-	function hello_dolly_active() {
-		return is_plugin_active( 'hello-dolly/hello.php' );
-	}
-
-	// Warn user if Hello Dolly is active
-	function simpsons_js() {
-		echo "
-		<script>
-			<!--
-			var r = window.confirm('It is discouraged to run Hello Simpsons Chalkboard Gag plugin alongside the Hello Dolly ' +
-				'plugin. Click OK to go to the Installed Plugins tab where you can deactivate Hello Dolly.');
-			if( r ){
-				window.location = '". site_url() ."/wp-admin/plugins.php';
-			}
-			//-->
-		</script>
-		";
-	}
 // END FIRST RUN //
 
 
@@ -99,45 +87,45 @@ function simpsons_css() {
 	// All good plugins should cleanup after themselves!
 	function simpsons_deactivate(){
 		delete_option( 'simpsons-gags' );
+		delete_option( 'simpsons-error' );
 		wp_clear_scheduled_hook( 'simpsons-gag-update' );
-		// GOODBYE CRUEL WORLD!!!
+		// GOODBYE, CRUEL WORLD!!!
 	}
 	register_deactivation_hook( __FILE__, 'simpsons_deactivate' );
 // END LAST RUN //
 
 
 // HELPERS //
-	function simpsons_has_curl() {
-		return in_array( 'curl', get_loaded_extensions() );
-	}
-
 	function simpsons_store_gags(){
-		// retrive most recent listing of Bartisms from remote
-		if( simpsons_has_curl() ) {
-			$ch = curl_init( SIMPSONS_URL );
-			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
-			$gags = curl_exec($ch);
+		// get most recent listing of Bartisms from remote site
+		$gags = wp_remote_get( SIMPSONS_URL,
+			array( 'user-agent' => $_SERVER['HTTP_USER_AGENT'] ) );
+
+		// I PITTY THE FOOL WHO DOESN'T ERROR TRAP!!
+		if( is_wp_error( $gags ) ) {
+			update_option( 'simpsons-error', $gags->get_error_message() );
+
+		} elseif( $gags['response']['code'] < 200 || $gags['response']['code'] > 299 ) {
+			update_option( 'simpsons-error', 
+				"{$gags['response']['code']}: {$gags['response']['message']}" );
+
+		} else { // successful get
+			$gags = preg_split( '/[\r\n]+/', $gags['body'] );
 		}
 
-		// Only fallback to local gags when there isn't a more recent version
-		// NOTE: Formerly used get_file_contents(), but this failed on some servers
-		if( !get_option( 'simpsons-gags' ) && (!isset($gags) || !$gags) ) // fallback to local file
-			$gags = simpsons_get_local_gags( plugin_dir_url( __FILE__ ).'gags.db' );
-
-		// Store gags
-		if( isset($gags) && $gags ) update_option( 'simpsons-gags', $gags );
-	}
-
-	function simpsons_get_local_gags($gagpath){
-		if (is_file($gagpath)) {
-			ob_start();
-			include $gagpath;
-			$gags = ob_get_contents();
-			ob_end_clean();
-			return $gags;
+		// Only fallback to local db if simpsons-gags has never been initialized
+		if( isset($error) && !get_option('simpsons-gags') ) {
+			$gags = file( plugin_dir_path(__FILE__).'gags.db', 
+				FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
 		}
-		return false;
+
+		// Parse & store gags
+		if( $gags ) {
+			if( ( $old = get_option( 'simpsons-gags' ) ) && count( $old ) >= count( $gags ) )
+				return; // nothing new
+			if( !$old ) update_option( 'simpsons-first-run', true );
+			update_option( 'simpsons-gags', $gags );
+		}			
 	}
-// END HELPERS
+// END HELPERS //
 ?>

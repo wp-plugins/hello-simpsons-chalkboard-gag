@@ -88,6 +88,7 @@ function simpsons_css() {
 	function simpsons_deactivate(){
 		delete_option( 'simpsons-gags' );
 		delete_option( 'simpsons-error' );
+		delete_option( 'simpsons-first-run' );
 		wp_clear_scheduled_hook( 'simpsons-gag-update' );
 		// GOODBYE, CRUEL WORLD!!!
 	}

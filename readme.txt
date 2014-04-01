@@ -1,6 +1,7 @@
 ﻿=== Hello Simpsons Chalkboard Gag ===
 Contributors: dan.rossiter
 Tags: simpsons, bart simpson, admin panel, fun, chalkboard gag, hello dolly
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=EE5LWRLG933EN&lc=US&item_name=Hello%20Simpsons%20Chalkboard%20Gag%20Plugin&item_number=hello%2dsimpsons&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Requires at least: 3.0
 Stable tag: 1.3
 Tested up to: 3.5

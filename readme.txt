@@ -3,8 +3,8 @@ Contributors: dan.rossiter
 Tags: simpsons, bart simpson, admin panel, fun, chalkboard gag, hello dolly
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=EE5LWRLG933EN&lc=US&item_name=Hello%20Simpsons%20Chalkboard%20Gag%20Plugin&item_number=hello%2dsimpsons&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Requires at least: 3.0
-Stable tag: 1.3
-Tested up to: 3.5
+Stable tag: 1.4
+Tested up to: 4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,10 @@ by default in WordPress distributions, it is strongly discouraged since the two 
 together. Please disable or uninstall **Hello Dolly** before using this plugin for best results.
 
 == Changelog ==
+
+= 1.4 =
+* **Enhancement:** No longer using Pastebin to handle updates. Pulling updates directly from WP.org plugin repository.
+* **Compatibility:** Updated to WordPress 4.0.
 
 = 1.3 =
 * **Enhancement:** Plugin now better handles downtime for remote retrival of chalkboard gags.

@@ -4,12 +4,12 @@ Plugin Name: Hello Simpsons Chalkboard Gag
 Plugin URI: http://wordpress.org/extend/plugins/simpsons-chalkboard-gag
 Description: Let Bart Simpson's childish wit lighten your day by randomly adding one of his chalkboard gags to your admin panel.
 Author: Dan Rossiter
-Version: 1.3
+Version: 1.4
 Author URI: http://danrossiter.org
 */
 
 // remote gag repository
-define('SIMPSONS_URL', 'http://pastebin.com/raw.php?i=VdKZ0V4d');
+define('SIMPSONS_URL', 'http://plugins.svn.wordpress.org/hello-simpsons-chalkboard-gag/trunk/gags.db');
 
 function simpsons_get_gag() {
 	$gags = get_option( 'simpsons-gags' );
